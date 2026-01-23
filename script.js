@@ -1,4 +1,80 @@
 let department = localStorage.getItem("department");
+let currentLang = localStorage.getItem("lang") || 'uk';
+
+const translations = {
+  uk: {
+    chooseDept: "Оберіть відділ",
+    stock: "Stock", cross: "Cross", fresh: "Fresh",
+    productivity: "Продуктивність", month: "Місяць",
+    calcProd: "Калькулятор Продуктивності",
+    hoursWorked: "Години роботи:", consumption: "Споживка:", chemistry: "Хімія:", rollers: "Ролки:",
+    market: "Базар:", boxing: "Бокс:", milk: "Молочка:", meat: "М'ясо:", vegs: "Овочі:",
+    calculate: "Обчислити", weeklyYield: "Тижнева Видайність (%)",
+    monthlySalary: "Місячний оклад", date: "Дата", hours: "Години", percent: "%", x: "X",
+    add: "Додати +", delete: "Видалити", export: "Експорт ⬇️",
+    errorHours: 'Помилка: години > 0',
+    lowProd: 'як тебе ще не звільнили',
+    midProd: 'Хаха, лох',
+    almost100: 'Не вистачило 1%',
+    over140: 'Перевиконання!',
+    confirmClear: 'Очистити всі дані?',
+    noData: 'Немає даних.',
+    noDataExport: 'Немає даних для експорту.'
+  },
+  en: {
+    chooseDept: "Select Department",
+    stock: "Stock", cross: "Cross", fresh: "Fresh",
+    productivity: "Productivity", month: "Month",
+    calcProd: "Productivity Calculator",
+    hoursWorked: "Hours Worked:", consumption: "Consumption:", chemistry: "Chemistry:", rollers: "Rollers:",
+    market: "Market:", boxing: "Boxing:", milk: "Dairy:", meat: "Meat:", vegs: "Vegetables:",
+    calculate: "Calculate", weeklyYield: "Weekly Yield (%)",
+    monthlySalary: "Monthly Salary", date: "Date", hours: "Hours", percent: "%", x: "X",
+    add: "Add +", delete: "Delete", export: "Export ⬇️",
+    errorHours: 'Error: hours > 0',
+    lowProd: 'How are you not fired yet?',
+    midProd: 'Haha, loser',
+    almost100: 'Missed 1%',
+    over140: 'Overachiever',
+    confirmClear: 'Clear all data?',
+    noData: 'No data available.',
+    noDataExport: 'No data to export.'
+  },
+  pl: {
+    chooseDept: "Wybierz dział",
+    stock: "Stock", cross: "Cross", fresh: "Fresh",
+    productivity: "Produktywność", month: "Miesiąc",
+    calcProd: "Kalkulator produktywności",
+    hoursWorked: "Godziny pracy:", consumption: "Zużycie:", chemistry: "Chemia:", rollers: "Rollery:",
+    market: "Rynek:", boxing: "Boks:", milk: "Nabiał:", meat: "Mięso:", vegs: "Warzywa:",
+    calculate: "Oblicz", weeklyYield: "Wydajność tygodniowa (%)",
+    monthlySalary: "Wynagrodzenie miesięczne", date: "Data", hours: "Godziny", percent: "%", x: "X",
+    add: "Dodaj +", delete: "Usuń", export: "Eksport ⬇️",
+    errorHours: 'Błąd: godziny > 0',
+    lowProd: 'Jak cię jeszcze nie zwolnili?',
+    midProd: 'Haha, frajer',
+    almost100: 'Brakuje 1%',
+    over140: 'Przesadziłeś',
+    confirmClear: 'Usunąć wszystkie dane?',
+    noData: 'Brak danych.',
+    noDataExport: 'Brak danych do eksportu.'
+  }
+};
+
+function t(key){ return translations[currentLang][key] || key; }
+
+function setLanguage(lang){
+  currentLang = lang;
+  localStorage.setItem("lang", lang);
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    if(el.tagName.toLowerCase() !== 'input')
+      el.textContent = t(el.getAttribute("data-i18n"));
+  });
+}
+
+document.querySelectorAll(".language-switcher button").forEach(btn=>{
+  btn.addEventListener('click', ()=>setLanguage(btn.dataset.lang));
+});
 
 const standards = {
   stock: {cartons:150, chemistry:123, rollers:110, market:110, boxing:31},
@@ -24,22 +100,26 @@ const ratesByDepartment = {
   ]
 };
 
+const tableBody=document.querySelector("#dataTable tbody");
+let cachedWeeks={},cachedTotalMoney=0;
+const dataKey = ()=>`workData_${department}`;
+
 function init(){
-  if(!department){
-    document.getElementById("departmentSelect").style.display = "block";
-  } else startApp();
+  if(!department){ document.getElementById("departmentSelect").style.display = "block"; }
+  else startApp();
+  setLanguage(currentLang);
 }
 
-function selectDepartment(dep){
-  department = dep;
-  localStorage.setItem("department", dep);
-  startApp();
+function selectDepartment(dep){ 
+  department=dep; 
+  localStorage.setItem("department", dep); 
+  startApp(); 
 }
 
 function startApp(){
-  document.getElementById("departmentSelect").style.display = "none";
-  document.getElementById("app").style.display = "block";
-  applyDepartment();
+  document.getElementById("departmentSelect").style.display="none";
+  document.getElementById("app").style.display="block";
+  applyDepartment(); 
   loadData();
 }
 
@@ -73,40 +153,23 @@ function calculateProductivity(){
   const getVal=id=>parseFloat(document.getElementById(id).value)||0;
   const rawHours=getVal('hoursWorked');
   const res=document.getElementById('prodResult');
-  if(rawHours<=0){res.innerText='Помилка: години > 0'; return;}
+  if(rawHours<=0){ res.innerText=t('errorHours'); return; }
 
   const hours = mapEffectiveHours(rawHours);
   const calc=(v,std)=>(v/hours)/std*100;
   let total=0;
-  for(const k in standards[department]){
-    total += calc(getVal(k), standards[department][k]);
-  }
+  for(const k in standards[department]) total += calc(getVal(k), standards[department][k]);
 
   let c='';
-  if(total<60) c='як тебе ше не звільнили бля';
-  else if(total<80) c='Хаха Лох';
-  else if(total<100&&total>=99) c='Бля 1 Процента не хватило Лох';
-  else if(total>140) c='Насосав';
+  if(total<60) c=t('lowProd');
+  else if(total<80) c=t('midProd');
+  else if(total<100&&total>=99) c=t('almost100');
+  else if(total>140) c=t('over140');
 
-  res.innerText=`Загальна продуктивність: ${total.toFixed(2)}% (ефект. год: ${hours})\n${c}`;
+  res.innerText=`${t('productivity')}: ${total.toFixed(2)}% (${hours} год)\n${c}`;
 
   autoLogToday(rawHours, Math.round(total));
 }
-
-function calculateWeek(){
-  const days=['mon','tue','wed','thu','fri','sat','sun'];
-  let total=0,count=0;
-  days.forEach(d=>{
-    const v=parseFloat(document.getElementById(d).value);
-    if(!isNaN(v) && v!==0){total+=v;count++;}
-  });
-  const avg = count ? (total/count).toFixed(2) : 0;
-  document.getElementById('weekResult').innerText=`Сума: ${total.toFixed(2)}% | Середнє: ${avg}%`;
-}
-
-const tableBody=document.querySelector("#dataTable tbody");
-let cachedWeeks={},cachedTotalMoney=0;
-const dataKey = ()=>`workData_${department}`;
 
 function saveData(){
   const rows=Array.from(tableBody.rows).map(r=>({
@@ -136,8 +199,15 @@ function addRow(date='',hours='',percent=''){
   saveData();
 }
 
-function deleteRow(btn){btn.closest('tr').remove();saveData();}
-function clearData(){if(confirm("Очистити всі дані?")){localStorage.removeItem(dataKey());tableBody.innerHTML="";calculateSummaries();}}
+function deleteRow(btn){ btn.closest('tr').remove(); saveData(); }
+
+function clearData(){
+  if(confirm(t('confirmClear'))){
+    localStorage.removeItem(dataKey());
+    tableBody.innerHTML="";
+    calculateSummaries();
+  }
+}
 
 function getRate(p){
   const table = ratesByDepartment[department];
@@ -148,7 +218,7 @@ function getRate(p){
 function calculateSummaries(){
   const data=JSON.parse(localStorage.getItem(dataKey())||"[]");
   if(!data.length){
-    document.getElementById("monthlySummary").textContent="Немає даних.";
+    document.getElementById("monthlySummary").textContent=t('noData');
     document.getElementById("weeklySummary").textContent="";
     document.getElementById("totalMoney").textContent="";
     return;
@@ -157,14 +227,12 @@ function calculateSummaries(){
   let totalHours=0,totalMoney=0,weeks={};
   data.forEach(e=>{
     const d=new Date(e.date); if(isNaN(d)) return;
-    const w=getWeekOfMonth(d);
-    if(!weeks[w]) weeks[w]=[];
-    weeks[w].push(e);
+    const w=getWeekOfMonth(d); if(!weeks[w]) weeks[w]=[]; weeks[w].push(e);
     totalHours+=e.hours;
   });
 
   cachedWeeks=weeks;
-  document.getElementById("monthlySummary").textContent=`Всього: ${totalHours.toFixed(1)} год`;
+  document.getElementById("monthlySummary").textContent=`${t('hours')}: ${totalHours.toFixed(1)}`;
 
   let txt='';
   totalMoney=0;
@@ -177,7 +245,7 @@ function calculateSummaries(){
     txt+=`Т${w}: ${hrs.toFixed(1)}г / ${avg.toFixed(0)}% = ${money.toFixed(2)} zł<br>`;
   }
   document.getElementById("weeklySummary").innerHTML=txt;
-  document.getElementById("totalMoney").textContent=`Загалом: ${totalMoney.toFixed(2)} zł`;
+  document.getElementById("totalMoney").textContent=`${t('monthlySalary')}: ${totalMoney.toFixed(2)} zł`;
   cachedTotalMoney=totalMoney;
 }
 
@@ -190,7 +258,7 @@ function getWeekOfMonth(date){
 
 function exportToExcel(){
   const data=JSON.parse(localStorage.getItem(dataKey())||"[]");
-  if(!data.length)return alert("Немає даних.");
+  if(!data.length)return alert(t('noDataExport'));
   const wsData=[["Дата","Години","%","Ставка","Сума (zł)"]];
   data.forEach(r=>{
     const rate=getRate(Math.round(r.percent));
@@ -214,10 +282,8 @@ function exportToExcel(){
 function autoLogToday(hours, percent){
   const today=new Date().toISOString().slice(0,10);
   const row=[...tableBody.rows].find(r=>r.cells[0].querySelector('input').value===today);
-  if(row){
-    row.cells[1].querySelector('input').value=hours;
-    row.cells[2].querySelector('input').value=percent;
-  } else addRow(today,hours,percent);
+  if(row){ row.cells[1].querySelector('input').value=hours; row.cells[2].querySelector('input').value=percent; }
+  else addRow(today,hours,percent);
   saveData();
 }
 

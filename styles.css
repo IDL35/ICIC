@@ -1,14 +1,16 @@
-body { background:#000; color:#0f0; font-family:Arial,sans-serif; padding:10px; margin:0; box-sizing:border-box; }
+body { background:#000; color:#0f0; font-family: sans-serif; padding:20px; margin:0; box-sizing:border-box; }
 h2 { text-align:center; margin-bottom:20px; }
 label { display:block; margin-top:10px; font-size:1rem; }
 .top-panel { display:flex; justify-content:space-around; background:#000; border-bottom:1px solid #222; padding:4px; position:sticky; top:0; z-index:100; }
 .top-panel button { background:#111; color:#0f0; border:1px solid #222; font-size:12px; padding:5px 8px; cursor:pointer; }
 .top-panel button.active { background:#222; }
-section { display:none; padding:10px; }
+section { display:none; padding:10px; margin-top: 20px; }
 section.active { display:block; }
-input, button { font-size:12px; background:#111; color:#0f0; border:none; border-radius:5px; padding:6px; width:100%; margin-top:5px; box-sizing:border-box; }
+input, button { font-size:12px; background:#111; color:#0f0; border:none; border-radius:5px; padding:6px; width:250px; margin-top:5px; box-sizing:border-box; }
 button:hover { background:#555; }
 #prodResult,#weekResult,#monthlySummary,#weeklySummary,#totalMoney { margin-top:15px; font-weight:bold; text-align:center; color:red; }
 table { width:100%; border-collapse:collapse; font-size:10px; background:#111; }
 th,td { border:1px solid #222; padding:2px; text-align:center; }
 @media(max-width:600px){ .top-panel button, input, button{ font-size:10px; padding:4px;} table{font-size:8px;} th,td{padding:1px;} }
+.language-switcher button { margin-left: 5px; }
+.language-switcher { top: 10px; right: 10px; }
