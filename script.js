@@ -7,8 +7,8 @@ const translations = {
     stock: "Stock", cross: "Cross", fresh: "Fresh",
     productivity: "Продуктивність", month: "Місяць",
     calcProd: "Калькулятор Продуктивності",
-    hoursWorked: "Години роботи:", consumption: "Споживка:", chemistry: "Хімія:", rollers: "Ролки:",
-    market: "Базар:", boxing: "Бокс:", milk: "Молочка:", meat: "М'ясо:", vegs: "Овочі:", zam: "Замиканя:", stands: "Стенди:", localization: "Локализація:",
+    hoursWorked: "Години роботи:", consumption: "Споживка:", chemistry: "Хімія:", rollers: "Ролки:", 
+    market: "Базар:", boxing: "Бокс:", nabyal: "Набял:", meat: "М'ясо:", vazhiva: "Важива:", piking: "Пікінг:", zam: "Замиканя:", stands: "Стенди:", localization: "Локализація:",
     calculate: "Обчислити", weeklyYield: "Тижнева Видайність (%)",
     monthlySalary: "Місячний оклад", date: "Дата", hours: "Години", percent: "%", x: "X",
     add: "Додати +", delete: "Видалити", export: "Експорт ⬇️",
@@ -27,7 +27,7 @@ const translations = {
     productivity: "Productivity", month: "Month",
     calcProd: "Productivity Calculator",
     hoursWorked: "Hours Worked:", consumption: "Consumption:", chemistry: "Chemistry:", rollers: "Rollers:",
-    market: "Market:", boxing: "Boxing:", milk: "Dairy:", meat: "Meat:", vegs: "Vegetables:", zam: "Closing:", stands: "Stands:", localization: "Localization:",
+    market: "Market:", boxing: "Boxing:", nabyal: "Nabyal:", meat: "Meat:", vazhiva: "Vazhiva:", piking: "Piking:", zam: "Closing:", stands: "Stands:", localization: "Localization:",
     calculate: "Calculate", weeklyYield: "Weekly Yield (%)",
     monthlySalary: "Monthly Salary", date: "Date", hours: "Hours", percent: "%", x: "X",
     add: "Add +", delete: "Delete", export: "Export ⬇️",
@@ -46,7 +46,7 @@ const translations = {
     productivity: "Produktywność", month: "Miesiąc",
     calcProd: "Kalkulator produktywności",
     hoursWorked: "Godziny pracy:", consumption: "Zużycie:", chemistry: "Chemia:", rollers: "Rollery:",
-    market: "Rynek:", boxing: "Boks:", milk: "Nabiał:", meat: "Mięso:", vegs: "Warzywa:", zam: "Zamknięcie:", stands: "Stojaki:", localization: "Lokalizacja:",
+    market: "Rynek:", boxing: "Boks:", nabyal: "Nabiał:", meat: "Mięso:", vazhiva: "Ważenie:", piking: "Piking:", zam: "Zamknięcie:", stands: "Stojaki:", localization: "Lokalizacja:",
     calculate: "Oblicz", weeklyYield: "Wydajność tygodniowa (%)",
     monthlySalary: "Wynagrodzenie miesięczne", date: "Data", hours: "Godziny", percent: "%", x: "X",
     add: "Dodaj +", delete: "Usuń", export: "Eksport ⬇️",
@@ -79,7 +79,7 @@ document.querySelectorAll(".language-switcher button").forEach(btn=>{
 const standards = {
   stock: {cartons:150, chemistry:123, rollers:110, market:110, boxing:31},
   cross: {cartons:123, market:100, zam:11, stands:11, localization:30},
-  fresh: {milk:90, meat:70, vegs:80}
+  fresh: {meat:140, nabyal:190, vazhiva:170, piking:112}
 };
 
 const ratesByDepartment = {
