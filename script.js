@@ -78,7 +78,7 @@ document.querySelectorAll(".language-switcher button").forEach(btn=>{
 
 const standards = {
   stock: {cartons:150, chemistry:123, rollers:110, market:110, boxing:31},
-  cross: {cartons:123, market:100, zam:11, stands:11, localization:30},
+  cross: {cartons:132, market:100, zam:11, stands:11, localization:30},
   fresh: {meat:140, nabyal:190, vazhiva:170, piking:112}
 };
 
